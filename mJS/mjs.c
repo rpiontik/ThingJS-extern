@@ -1835,6 +1835,16 @@ int mg_strcmp(const struct mg_str str1, const struct mg_str str2);
 int mg_strncmp(const struct mg_str str1, const struct mg_str str2, size_t n);
 
 /*
+ * Compare two `mg_str`s ignoreing case; return value is the same as `strcmp`.
+ */
+int mg_strcasecmp(const struct mg_str str1, const struct mg_str str2);
+
+/*
+ * Free the string (assuming it was heap allocated).
+ */
+void mg_strfree(struct mg_str *s);
+
+/*./do
  * Finds the first occurrence of a substring `needle` in the `haystack`.
  */
 const char *mg_strstr(const struct mg_str haystack, const struct mg_str needle);
@@ -5048,8 +5058,10 @@ int mg_strcmp(const struct mg_str str1, const struct mg_str str2) WEAK;
 int mg_strcmp(const struct mg_str str1, const struct mg_str str2) {
   size_t i = 0;
   while (i < str1.len && i < str2.len) {
-    if (str1.p[i] < str2.p[i]) return -1;
-    if (str1.p[i] > str2.p[i]) return 1;
+    int c1 = str1.p[i];
+    int c2 = str2.p[i];
+    if (c1 < c2) return -1;
+    if (c1 > c2) return 1;
     i++;
   }
   if (i < str1.len) return 1;
@@ -5069,6 +5081,29 @@ int mg_strncmp(const struct mg_str str1, const struct mg_str str2, size_t n) {
     s2.len = n;
   }
   return mg_strcmp(s1, s2);
+}
+
+int mg_strcasecmp(const struct mg_str str1, const struct mg_str str2) WEAK;
+int mg_strcasecmp(const struct mg_str str1, const struct mg_str str2) {
+    size_t i = 0;
+    while (i < str1.len && i < str2.len) {
+        int c1 = tolower((int) str1.p[i]);
+        int c2 = tolower((int) str2.p[i]);
+        if (c1 < c2) return -1;
+        if (c1 > c2) return 1;
+        i++;
+    }
+    if (i < str1.len) return 1;
+    if (i < str2.len) return -1;
+    return 0;
+}
+
+void mg_strfree(struct mg_str *s) WEAK;
+void mg_strfree(struct mg_str *s) {
+    char *sp = (char *) s->p;
+    s->p = NULL;
+    s->len = 0;
+    if (sp != NULL) free(sp);
 }
 
 const char *mg_strstr(const struct mg_str haystack,
@@ -6283,8 +6318,11 @@ int json_vprintf(struct json_out *out, const char *fmt, va_list xap) {
          * inherit the advancement made by vprintf.
          * 32-bit (linux or windows) passes va_list by value.
          */
-        if ((n + 1 == strlen("%" PRId64) && strcmp(fmt2, "%" PRId64) == 0) ||
-            (n + 1 == strlen("%" PRIu64) && strcmp(fmt2, "%" PRIu64) == 0)) {
+
+         if ((n + 1 == (int) strlen("%" PRId64) &&
+              strcmp(fmt2, "%" PRId64) == 0) ||
+             (n + 1 == (int) strlen("%" PRIu64) &&
+              strcmp(fmt2, "%" PRIu64) == 0)) {
           (void) va_arg(ap, int64_t);
           skip += strlen(PRIu64) - 1;
         } else if (strcmp(fmt2, "%.*s") == 0) {
