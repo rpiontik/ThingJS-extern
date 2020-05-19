@@ -1132,6 +1132,9 @@ const char *mjs_typeof(mjs_val_t v);
 void mjs_fprintf(mjs_val_t v, struct mjs *mjs, FILE *fp);
 void mjs_sprintf(mjs_val_t v, struct mjs *mjs, char *buf, size_t buflen);
 
+mjs_err_t mjs_json_stringify(struct mjs *mjs, mjs_val_t v,
+                             char *buf, size_t size, char **res);
+
 #if MJS_ENABLE_DEBUG
 
 void mjs_disasm(const uint8_t *code, size_t len);

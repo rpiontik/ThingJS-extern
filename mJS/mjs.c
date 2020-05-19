@@ -4578,8 +4578,6 @@ MJS_PRIVATE mjs_err_t to_json_or_debug(struct mjs *mjs, mjs_val_t v, char *buf,
                                        size_t size, size_t *res_len,
                                        uint8_t is_debug);
 
-MJS_PRIVATE mjs_err_t mjs_json_stringify(struct mjs *mjs, mjs_val_t v,
-                                         char *buf, size_t size, char **res);
 MJS_PRIVATE void mjs_op_json_stringify(struct mjs *mjs);
 MJS_PRIVATE void mjs_op_json_parse(struct mjs *mjs);
 
@@ -11906,7 +11904,7 @@ clean:
   return rcode;
 }
 
-MJS_PRIVATE mjs_err_t mjs_json_stringify(struct mjs *mjs, mjs_val_t v,
+mjs_err_t mjs_json_stringify(struct mjs *mjs, mjs_val_t v,
                                          char *buf, size_t size, char **res) {
   mjs_err_t rcode = MJS_OK;
   char *p = buf;
