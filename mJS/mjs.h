@@ -1135,6 +1135,9 @@ void mjs_sprintf(mjs_val_t v, struct mjs *mjs, char *buf, size_t buflen);
 mjs_err_t mjs_json_stringify(struct mjs *mjs, mjs_val_t v,
                              char *buf, size_t size, char **res);
 
+mjs_err_t mjs_json_parse(struct mjs *mjs, const char *str, size_t len, mjs_val_t *res);
+
+
 #if MJS_ENABLE_DEBUG
 
 void mjs_disasm(const uint8_t *code, size_t len);

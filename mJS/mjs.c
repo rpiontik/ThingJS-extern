@@ -4581,9 +4581,6 @@ MJS_PRIVATE mjs_err_t to_json_or_debug(struct mjs *mjs, mjs_val_t v, char *buf,
 MJS_PRIVATE void mjs_op_json_stringify(struct mjs *mjs);
 MJS_PRIVATE void mjs_op_json_parse(struct mjs *mjs);
 
-MJS_PRIVATE mjs_err_t
-mjs_json_parse(struct mjs *mjs, const char *str, size_t len, mjs_val_t *res);
-
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */
@@ -12071,8 +12068,7 @@ static void frozen_cb(void *data, const char *name, size_t name_len,
   mjs_disown(ctx->mjs, &v);
 }
 
-MJS_PRIVATE mjs_err_t
-mjs_json_parse(struct mjs *mjs, const char *str, size_t len, mjs_val_t *res) {
+mjs_err_t mjs_json_parse(struct mjs *mjs, const char *str, size_t len, mjs_val_t *res) {
   struct json_parse_ctx *ctx =
       (struct json_parse_ctx *) calloc(sizeof(struct json_parse_ctx), 1);
   int json_res;
