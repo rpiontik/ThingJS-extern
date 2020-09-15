@@ -8420,6 +8420,12 @@ void mjs_print_error(struct mjs *mjs, FILE *fp, const char *msg,
   fprintf(fp, "%s: %s\n", msg, mjs_strerror(mjs, mjs->error));
 }
 
+// R.Piontik
+int mjs_get_last_error(struct mjs *mjs, void * buffer, const int size) {
+    return snprintf(buffer, size, "%s", mjs_strerror(mjs, mjs->error));
+}
+// R.Piontik
+
 MJS_PRIVATE void mjs_die(struct mjs *mjs) {
   mjs_val_t msg_v = MJS_UNDEFINED;
   const char *msg = NULL;
@@ -9314,12 +9320,12 @@ void mjs_debugger_do_handle(struct mjs *mjs, int offset) {
 	mjs->dbgr_action = mjs->dbgr_handler(mjs, filename, line_no);
 }
 
-inline void mjs_debugger_handle(struct mjs *mjs, int offset) {
+MJS_PRIVATE void mjs_debugger_handle(struct mjs *mjs, int offset) {
 	if(mjs->dbgr_enabled && (mjs->dbgr_action != MJS_DBGR_ACT_RUN) && (mjs->dbgr_handler))
 		mjs_debugger_do_handle(mjs, offset);
 }
 
-inline void mjs_debugger_request(struct mjs *mjs, int offset) {
+MJS_PRIVATE void mjs_debugger_request(struct mjs *mjs, int offset) {
     if(mjs->dbgr_enabled && mjs->dbgr_requester) {
         const char *filename = mjs_get_bcode_filename_by_offset(mjs, offset);
         int line_no = mjs_get_lineno_by_offset(mjs, offset);
@@ -9327,7 +9333,7 @@ inline void mjs_debugger_request(struct mjs *mjs, int offset) {
     }
 }
 
-inline void mjs_debugger_onerror(struct mjs *mjs, int offset) {
+MJS_PRIVATE void mjs_debugger_onerror(struct mjs *mjs, int offset) {
     if(mjs->dbgr_enabled && mjs->dbgr_on_error) {
         const char *filename = mjs_get_bcode_filename_by_offset(mjs, offset);
         int line_no = mjs_get_lineno_by_offset(mjs, offset);

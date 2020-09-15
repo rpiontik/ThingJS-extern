@@ -265,6 +265,11 @@ void mjs_print_error(struct mjs *mjs, FILE *fp, const char *msg,
  */
 const char *mjs_strerror(struct mjs *mjs, enum mjs_err err);
 
+/* R.Piontik
+ * return a string of an error to buffer.
+ */
+int mjs_get_last_error(struct mjs *mjs, void * buffer, const int size);
+
 /*
  * Sets whether *.jsc files are generated when *.js file is executed. By
  * default it's 0.
