@@ -8,6 +8,9 @@ git submodule add git@github.com:rpiontik/ThingJS-extern.git components/thingjs_
 # Requirements
 None
 
+# Thankful
+* [JetBrains](https://www.jetbrains.com/) for OpenSource license.
+
 # Licensing
 Look for the components.
 
