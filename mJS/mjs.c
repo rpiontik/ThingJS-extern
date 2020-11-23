@@ -9801,6 +9801,26 @@ clean:
   return mjs->error;
 }
 
+/* R.Piontik */
+mjs_err_t mjs_eval(struct mjs *mjs, const char *src, mjs_val_t *res) {
+    size_t off = mjs->bcode_len;
+    size_t bcode_len = mjs->bcode_parts.len;
+    size_t bcode_parts_cnt = mjs_bcode_parts_cnt(mjs);
+    mjs_val_t r = MJS_UNDEFINED;
+    mjs->error = mjs_parse("<stdin>", src, mjs);
+    if (cs_log_threshold >= LL_VERBOSE_DEBUG) mjs_dump(mjs, 1);
+    if (mjs->error == MJS_OK) {
+        mjs_execute(mjs, off, &r);
+        for(int i=bcode_parts_cnt; i < mjs_bcode_parts_cnt(mjs); i++) {
+            free((void*)(mjs_bcode_part_get(mjs, i)->data.p));
+        }
+        mjs->bcode_len = off;
+        mjs->bcode_parts.len = bcode_len;
+    }
+    if (res != NULL) *res = r;
+    return mjs->error;
+}
+
 MJS_PRIVATE mjs_err_t mjs_exec_internal(struct mjs *mjs, const char *path,
                                         const char *src, int generate_jsc,
                                         mjs_val_t *res) {
