@@ -9374,7 +9374,6 @@ MJS_PRIVATE mjs_err_t mjs_execute(struct mjs *mjs, size_t off, mjs_val_t *res) {
 	//CUSTOM
 
     mjs->cur_bcode_offset = i;
-
     if (mjs->need_gc) {
       if (maybe_gc(mjs)) {
         mjs->need_gc = 0;
@@ -11567,6 +11566,10 @@ void gc_compact_strings(struct mjs *mjs) {
   }
 
   mjs->owned_strings.len = head;
+}
+
+void mjs_gc_inhibit(struct mjs *mjs, bool status) {
+    mjs->inhibit_gc = status ? 1 : 0;
 }
 
 MJS_PRIVATE int maybe_gc(struct mjs *mjs) {

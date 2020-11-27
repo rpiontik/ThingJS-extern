@@ -689,6 +689,8 @@ mjs_err_t mjs_eval(struct mjs *, const char *src, mjs_val_t *res);
 
 /* Perform garbage collection */
 void mjs_gc(struct mjs *mjs, int full);
+/* Inhibit automatic garbage collection */
+void mjs_gc_inhibit(struct mjs *mjs, bool status);
 
 mjs_err_t mjs_exec_file(struct mjs *mjs, const char *path, mjs_val_t *res);
 mjs_err_t mjs_apply(struct mjs *mjs, mjs_val_t *res, mjs_val_t func,
