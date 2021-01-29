@@ -2096,7 +2096,8 @@ typedef struct stat cs_stat_t;
 #endif
 
 #define INVALID_SOCKET (-1)
-#define SOMAXCONN 10
+//Comment reason: esp-idf/components/newlib/platform_include/net/if.h:24: warning: "SOMAXCONN" redefined
+#define SOMAXCONN 128
 typedef int sock_t;
 
 #if MG_NET_IF == MG_NET_IF_LWIP_LOW_LEVEL
